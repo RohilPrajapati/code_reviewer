@@ -34,41 +34,30 @@ A modern, high-performance, full-stack **AI Code Reviewer** application designed
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+## 🏗️ System Architecture
 
 ```
-   ┌────────────────────────────────────────────────────────┐
-   │            Git Providers (Unified GitProvider)         │
-   │      GitHub REST API  │  GitLab API  │  Bitbucket      │
-   └───────────────────────────┬────────────────────────────┘
-                               │ Fetch Multi-File Diffs
-                               ▼
-   ┌────────────────────────────────────────────────────────┐
-   │         Context-Selection & Diff Pruning Pipeline      │
-   │  - Classify files (drop lockfiles, generated code)     │
-   │  - Detect changed AST symbols & call graphs            │
-   │  - Rank relevant hunks & retrieve surrounding context  │
-   └───────────────────────────┬────────────────────────────┘
-                               │ Compact Grounded Context
-                               ▼
-   ┌────────────────────────────────────────────────────────┐
-   │           Senior AI Review Engine (AIProvider)         │
-   │    Google Gemini (SSE) │ OpenAI GPT-4o │ Anthropic     │
-   └───────────────────────────┬────────────────────────────┘
-                               │ Streamed Line-Level Findings
-                               ▼
-   ┌────────────────────────────────────────────────────────┐
-   │       Evidence-Based Review Studio (Next.js 14)        │
-   │  - PR Risk Scorecard (Security, Correctness, Tests)    │
-   │  - Traceable Code Evidence (Line references & Proof)   │
-   │  - Side-by-Side & Unified Diff Viewers                 │
-   │  - Interactive AI Discussion & One-Click Fix Patching  │
-   └───────────────────────────┬────────────────────────────┘
-                               │ Publish Structured Verdict
-                               ▼
-   ┌────────────────────────────────────────────────────────┐
-   │     Remote Pull Request / Merge Request Discussion     │
-   └────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                 Next.js Frontend (App Router)               │
+│  - Dashboard / Repos / PR List / Settings                   │
+│  - Split-view Diff Viewer (File tree + Collapsible Diffs)   │
+│  - SSE Streaming AI Chat Panel with Quick Actions           │
+│  - Dark / Light Mode (Tailwind + Radix/shadcn)              │
+└──────────────────────────────┬──────────────────────────────┘
+                               │ REST / SSE
+┌──────────────────────────────▼──────────────────────────────┐
+│                       Go Backend (Chi)                      │
+│  - AES-256-GCM Encrypted Secret Storage                     │
+│  - Provider Abstraction (GitHub & GitLab)                   │
+│  - PR Diff Fetching & Patch Normalizer                      │
+│  - Gemini AI Streaming Proxy (SSE)                          │
+│  - SQLite Database (Integrations, Repos, PRs, Chat History) │
+└──────────────┬──────────────────────┬───────────────────────┘
+               │ REST                 │ REST (SSE)
+     ┌─────────▼─────────┐    ┌───────▼───────────┐
+     │ GitHub / GitLab   │    │ Google Gemini API │
+     │ REST APIs         │    │ (User's API Key)  │
+     └───────────────────┘    └───────────────────┘
 ```
 
 ---
@@ -217,15 +206,14 @@ The scanner runs in milliseconds and verifies:
 - ✅ **Secret Pattern Scanner**: Scans for Google Gemini (`AIzaSy...`), GitHub (`ghp_...`), GitLab (`glpat-...`), and private keys.
 - ✅ **Code Health & Tests**: Runs `go vet ./...` and `npm test` to guarantee clean compilation.
 
+---
+
+## 📄 Documentation
+
+For full architecture specs, database schemas, and AI agent prompt pipelines, please refer to [AGENTS.md](./AGENTS.md).
 
 ---
 
-## 7. Strategic Engineering Roadmap & TODO List
+## ⚖️ License
 
-1. **Milestone 1: Decision Intelligence & Risk Scorecard** (`LOW` | `MEDIUM` | `HIGH` | `CRITICAL`) with deep-link navigation.
-2. **Milestone 2: Evidence-Based Line Proofs** (Concrete line citations, confidence ratings, and suggested test generation).
-3. **Milestone 3: Context-Selection & Diff Pruning** (Noise filtering, AST symbol extraction, relevance ranking).
-4. **Milestone 4: Finding-Centric Structured Entities** (Relational `findings` model with threaded per-finding discussion).
-5. **Milestone 5: Multi-Provider Extensibility** (`GitProvider`: Bitbucket; `AIProvider`: OpenAI, Anthropic, Ollama).
-6. **Milestone 6: Review-to-Resolution Studio** (Auto-scan, evidence jump, 1-click patch generation, publish senior review).
-7. **Product Focus Principle**: Zero feature dilution — singular focus on world-class Pull Request code reviews.
+MIT License. Built with ❤️ for developers and code reviewers.
