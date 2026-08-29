@@ -3,6 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
 	_ "modernc.org/sqlite"
@@ -13,6 +15,12 @@ type DB struct {
 }
 
 func InitDB(dbPath string) (*DB, error) {
+	if dir := filepath.Dir(dbPath); dir != "" && dir != "." {
+		if err := os.MkdirAll(dir, 0755); err != nil {
+			return nil, fmt.Errorf("failed to create db directory %s: %w", dir, err)
+		}
+	}
+
 	conn, err := sql.Open("sqlite", dbPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open sqlite database at %s: %w", dbPath, err)

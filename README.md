@@ -109,7 +109,7 @@ A modern, high-performance, full-stack **AI Code Reviewer** application designed
 #### 1. Start the Go Backend
 ```bash
 cd backend
-export ENCRYPTION_KEY="0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+export ENCRYPTION_KEY=$(openssl rand -hex 32)
 export PORT="8080"
 export DB_PATH="./reviewer.db"
 

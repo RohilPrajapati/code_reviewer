@@ -9,7 +9,7 @@ services:
     environment:
       - PORT=8080
       - DB_PATH=/app/data/reviewer.db
-      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-}
       - CORS_ORIGIN=http://localhost:3000
     volumes:
       - backend-data:/app/data
