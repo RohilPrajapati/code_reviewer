@@ -1,0 +1,93 @@
+# ==========================================
+# Environment Variables & Secrets (CRITICAL)
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+!.env.example
+
+# ==========================================
+# SQLite Database & Data Storage
+# ==========================================
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+reviewer.db
+data/
+backend/data/
+backend/reviewer.db
+
+# ==========================================
+# Go Backend Artifacts
+# ==========================================
+backend/server
+backend/server.exe
+backend/bin/
+backend/*.test
+backend/*.out
+backend/coverage.txt
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# ==========================================
+# Next.js & Node.js Frontend Artifacts
+# ==========================================
+node_modules/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+.next/
+out/
+build/
+dist/
+.turbo/
+
+# NPM & Yarn logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Next.js telemetry
+.next/cache/
+
+# ==========================================
+# Operating System & IDE Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+# Logs & Temporary Files
+# ==========================================
+logs/
+*.log
+scratch/
+tmp/
+temp/
