@@ -6,6 +6,7 @@ import { ChevronDown, ChevronRight, Copy, Check, MessageSquareCode, Columns, Row
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { getLanguageFromFilename, highlightCodeLine } from "@/lib/syntax";
 
 interface DiffFileProps {
   file: FileDiff;
@@ -37,6 +38,7 @@ export function DiffFile({ file, initialViewMode = "unified", onReferenceLine }:
   const [collapsed, setCollapsed] = useState(false);
   const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<"unified" | "split">(initialViewMode);
+  const language = useMemo(() => getLanguageFromFilename(file.filename), [file.filename]);
 
   useEffect(() => {
     setViewMode(initialViewMode);
@@ -196,6 +198,11 @@ export function DiffFile({ file, initialViewMode = "unified", onReferenceLine }:
             <span className="text-muted-foreground font-mono truncate">(renamed from {file.old_filename})</span>
           )}
           {getStatusBadge(file.status)}
+          {language !== "plaintext" && (
+            <Badge variant="outline" className="text-[10px] px-1.5 py-0 uppercase font-mono font-medium text-muted-foreground/80 bg-muted/30">
+              {language}
+            </Badge>
+          )}
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -306,7 +313,12 @@ export function DiffFile({ file, initialViewMode = "unified", onReferenceLine }:
                               <span className={cn("w-2.5 select-none font-bold shrink-0 text-center", isLeftDel ? "text-rose-600" : "text-transparent")}>
                                 {isLeftDel ? "-" : " "}
                               </span>
-                              <span className="truncate">{left.content}</span>
+                              <span
+                                className="truncate font-mono"
+                                dangerouslySetInnerHTML={{
+                                  __html: highlightCodeLine(left.content, language),
+                                }}
+                              />
                             </div>
                             {onReferenceLine && left.lineNumber && (
                               <button
@@ -348,7 +360,12 @@ export function DiffFile({ file, initialViewMode = "unified", onReferenceLine }:
                               <span className={cn("w-2.5 select-none font-bold shrink-0 text-center", isRightAdd ? "text-emerald-600" : "text-transparent")}>
                                 {isRightAdd ? "+" : " "}
                               </span>
-                              <span className="truncate">{right.content}</span>
+                              <span
+                                className="truncate font-mono"
+                                dangerouslySetInnerHTML={{
+                                  __html: highlightCodeLine(right.content, language),
+                                }}
+                              />
                             </div>
                             {onReferenceLine && right.lineNumber && (
                               <button
@@ -412,7 +429,12 @@ export function DiffFile({ file, initialViewMode = "unified", onReferenceLine }:
                             <span className="w-3 select-none text-muted-foreground/80 font-bold shrink-0">
                               {isAdd ? "+" : isDel ? "-" : " "}
                             </span>
-                            <span className="truncate">{line.content}</span>
+                            <span
+                              className="truncate font-mono"
+                              dangerouslySetInnerHTML={{
+                                __html: highlightCodeLine(line.content, language),
+                              }}
+                            />
                           </div>
 
                           {/* Ask AI / Reference Button on Hover */}
